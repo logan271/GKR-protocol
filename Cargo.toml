@@ -1,0 +1,21 @@
+[workspace]
+members = ["crates/multilinear-ext", "crates/sum-check", "crates/gkr"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+
+[workspace.dependencies]
+ark-ff = "0.6"
+ark-poly = "0.6"
+ark-std = "0.6"
+ark-bn254 = "0.6"
+multilinear-ext = { path = "crates/multilinear-ext" }
+sum-check = { path = "crates/sum-check" }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
