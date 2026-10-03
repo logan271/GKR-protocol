@@ -167,10 +167,10 @@ Each triple can also be viewed as a single five-bit string. For example, `(0, 00
 
 The original functions accept only bit strings. Sum-check also needs evaluations at arbitrary field points, whose coordinates need not be zero or one.
 
-A function's **multilinear extension** is the unique polynomial, over the chosen field, that matches every row of its table and has degree at most one in each input coordinate. For a table $f:\{0,1\}^k\to\mathbb F$, the extension is:
+A function's **multilinear extension** is the unique polynomial, over the chosen field, that matches every row of its table and has degree at most one in each input coordinate. For a table $f:\lbrace 0,1 \rbrace^k\to\mathbb F$, the extension is:
 
 $$
-\widetilde f(r)=\sum_{x\in\{0,1\}^k}f(x)\,\chi_x(r),
+\widetilde f(r)=\sum_{x\in\lbrace 0,1 \rbrace^k}f(x) \chi_x(r),
 \qquad
 \chi_x(r)=\prod_{j=1}^k\bigl(x_jr_j+(1-x_j)(1-r_j)\bigr).
 $$
@@ -227,7 +227,7 @@ The wiring equation was first described for one Boolean gate label. GKR also nee
 
 $$
 \begin{aligned}
-\widetilde W_i(r)=\sum_{b,c\in\{0,1\}^{k_{i+1}}}\Bigl[{}
+\widetilde W_i(r)=\sum_{b,c\in\lbrace 0,1 \rbrace^{k_{i+1}}}\Bigl[{}
 &\widetilde{\mathrm{add}}_i(r,b,c)
   \bigl(W_{i+1}(b)+W_{i+1}(c)\bigr)\\
 +{}&\widetilde{\mathrm{mult}}_i(r,b,c)
@@ -273,7 +273,7 @@ $$
 Each of $B,C$ has $k_{i+1}$ coordinates, so this polynomial has $m=2k_{i+1}$ variables. The claim for this layer is now the standard sum-check statement:
 
 $$
-h_i=\sum_{B,C\in\{0,1\}^{k_{i+1}}}f_i(B,C).
+h_i=\sum_{B,C\in\lbrace 0,1 \rbrace^{k_{i+1}}}f_i(B,C).
 $$
 
 The sum ranges over Boolean child labels. During sum-check, challenges bind some coordinates to arbitrary field elements. Each individual variable of $f_i$ has degree at most two: the wiring extension has degree one in that coordinate, and a child-value extension contributes at most one more. The verifier knows this degree bound even though it does not know the next layer's value table.
@@ -287,7 +287,7 @@ Flatten the coordinates of $B,C$ into $X_1,\ldots,X_m$, and call the resulting p
 **Round 1.** Before seeing any challenges for this sum-check, the prover sends the univariate polynomial
 
 $$
-q_1(T)=\sum_{x_2,\ldots,x_m\in\{0,1\}}
+q_1(T)=\sum_{x_2,\ldots,x_m\in\lbrace 0,1 \rbrace}
 f(T,x_2,\ldots,x_m).
 $$
 
@@ -305,7 +305,7 @@ The endpoint sum partitions the Boolean cube into cases where the first bit is z
 **Round 2.** After receiving $s_1$, the prover sends
 
 $$
-q_2(T)=\sum_{x_3,\ldots,x_m\in\{0,1\}}
+q_2(T)=\sum_{x_3,\ldots,x_m\in\lbrace 0,1 \rbrace}
 f(s_1,T,x_3,\ldots,x_m).
 $$
 
@@ -320,7 +320,7 @@ If those checks pass, it samples a fresh $s_2\in\mathbb F$ and sets $h_2=q_2(s_2
 **Round $j$.** After challenges $s_1,\ldots,s_{j-1}$, the honest prover sends
 
 $$
-q_j(T)=\sum_{x_{j+1},\ldots,x_m\in\{0,1}
+q_j(T)=\sum_{x_{j+1},\ldots,x_m\in\lbrace 0,1 \rbrace}
 f(s_1,\ldots,s_{j-1},T,x_{j+1},\ldots,x_m).
 $$
 
@@ -341,24 +341,24 @@ Before the last round, the verifier needs only the current claimed sum, the degr
 There are $m=2k_{i+1}$ rounds in this layer's sum-check. After the verifier samples $s_m$, no Boolean variables remain. It now needs to check
 
 $$
-q_m(s_m)=f_i(b^*,c^*),
+q_m(s_m)=f_i(b^{\ast},c^{\ast}),
 $$
 
-where $(b^*,c^*)=(s_1,\ldots,s_m)$ split into the first and last $k_{i+1}$ coordinates. These are random field vectors, not necessarily Boolean gate labels.
+where $(b^{\ast},c^{\ast})=(s_1,\ldots,s_m)$ split into the first and last $k_{i+1}$ coordinates. These are random field vectors, not necessarily Boolean gate labels.
 
-The verifier knows the public circuit and can evaluate the wiring extensions at $(r_i,b^*,c^*)$. It does not know the next layer's gate-value polynomial at $b^*$ and $c^*$, so the prover supplies claimed values
+The verifier knows the public circuit and can evaluate the wiring extensions at $(r_i,b^{\ast},c^{\ast})$. It does not know the next layer's gate-value polynomial at $b^{\ast}$ and $c^{\ast}$, so the prover supplies claimed values
 
 $$
-z_1=\widetilde W_{i+1}(b^*),
-\qquad z_2=\widetilde W_{i+1}(c^*).
+z_1=\widetilde W_{i+1}(b^{\ast}),
+\qquad z_2=\widetilde W_{i+1}(c^{\ast}).
 $$
 
 The verifier substitutes these into the definition of $f_i$ and checks:
 
 $$
 q_m(s_m)=
-\widetilde{\mathrm{add}}_i(r_i,b^*,c^*)(z_1+z_2)
-+\widetilde{\mathrm{mult}}_i(r_i,b^*,c^*)z_1z_2.
+\widetilde{\mathrm{add}}_i(r_i,b^{\ast},c^{\ast})(z_1+z_2)
++\widetilde{\mathrm{mult}}_i(r_i,b^{\ast},c^{\ast})z_1z_2.
 $$
 
 This is the final evaluation check for this sum-check invocation. It ties the transcript to the circuit's wiring relation. The verifier still has not established that $z_1,z_2$ really are evaluations of the next layer's table; it carries those claims into the next layer's iteration.
@@ -380,9 +380,9 @@ $$
 After sum-check and its final evaluation check, there are two claims about the next layer:
 
 $$
-\widetilde W_{i+1}(b^*)=z_1,
+\widetilde W_{i+1}(b^{\ast})=z_1,
 \qquad
-\widetilde W_{i+1}(c^*)=z_2.
+\widetilde W_{i+1}(c^{\ast})=z_2.
 $$
 
 The line-reduction step combines these two claims into one claim at a fresh point of layer $i+1$. Only after that reduction is complete does GKR start a **new, full sum-check invocation** for the transition from layer $i+1$ to layer $i+2$.
@@ -401,21 +401,21 @@ In short: **sum-check rounds fix the coordinates of child labels; a completed su
 After the layer's sum-check, the verifier has two claims about the next layer's multilinear extension:
 
 $$
-\widetilde W_{i+1}(b^*)=z_1,
+\widetilde W_{i+1}(b^{\ast})=z_1,
 \qquad
-\widetilde W_{i+1}(c^*)=z_2,
+\widetilde W_{i+1}(c^{\ast})=z_2,
 $$
 
-where $b^*,c^*\in\mathbb F^{k_{i+1}}$ are the two random points left by sum-check. The next layer's protocol is easiest to run with a **single** claim. Line reduction turns these two claims into one.
+where $b^{\ast},c^{\ast}\in\mathbb F^{k_{i+1}}$ are the two random points left by sum-check. The next layer's protocol is easiest to run with a **single** claim. Line reduction turns these two claims into one.
 
 ### 1. Draw a line through the two points
 
-There is a unique line parametrization that starts at $b^*$ when $t=0$ and reaches $c^*$ when $t=1$:
+There is a unique line parametrization that starts at $b^{\ast}$ when $t=0$ and reaches $c^{\ast}$ when $t=1$:
 
 $$
-\ell(t)=b^*+t(c^*-b^*),
+\ell(t)=b^{\ast}+t(c^{\ast}-b^{\ast}),
 \qquad
-\ell(0)=b^*,\quad \ell(1)=c^*.
+\ell(0)=b^{\ast},\quad \ell(1)=c^{\ast}.
 $$
 
 ### 2. The prover describes the extension along that line
@@ -453,7 +453,7 @@ The roles are worth separating: the sum-check has already checked the wiring rel
 
 ### A one-coordinate example
 
-Suppose the next layer has two gate values, $[5,35]$, so its multilinear extension is $\widetilde W(t)=5+30t$. Take two sum-check points $b^*=2$ and $c^*=4$ in $\mathbb F_{101}$. The true endpoint values are $65$ and $24$ (since $125\equiv24\pmod{101}$).
+Suppose the next layer has two gate values, $[5,35]$, so its multilinear extension is $\widetilde W(t)=5+30t$. Take two sum-check points $b^{\ast}=2$ and $c^{\ast}=4$ in $\mathbb F_{101}$. The true endpoint values are $65$ and $24$ (since $125\equiv24\pmod{101}$).
 
 In one dimension, the line from $2$ to $4$ is $\ell(t)=2+2t$. The prover's correct line polynomial is:
 
